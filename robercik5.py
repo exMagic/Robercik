@@ -1,3 +1,5 @@
+#first comment in this code:)
+
 import RPi.GPIO as GPIO
 import tkinter as tk
 
@@ -41,8 +43,6 @@ def right():
   rightFront.ChangeDutyCycle(100)
   leftRear.ChangeDutyCycle(100)
   
-
-
                            
 rightFront.start(0)                      
 leftFront.start(0)
