@@ -94,6 +94,7 @@ if __name__ == '__main__':
         last_time = time.time()
         start_time = time.time()
         bwd()
+        left()
         while True:
             dist = distance()
             print ("Masz do przeszkody = %.1f cm" % dist)
