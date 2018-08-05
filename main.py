@@ -1,21 +1,19 @@
-
-#Libraries
-import RPi.GPIO as GPIO
+import RPi.GPIO as gpio
 import time
-import tkinter as tk
+import sys
 
-GPIO.setwarnings(False) 
-GPIO.setmode(GPIO.BOARD)
+gpio.setmode(gpio.BCM)
 
-GPIO.setup(36, GPIO.OUT)
-rightRear = GPIO.PWM(36, 100)
-GPIO.setup(38, GPIO.OUT)
-leftRear = GPIO.PWM(38, 100)
+gpio.setup(6, gpio.OUT)
+rightRear = gpio.PWM(6, 100)
+gpio.setup(19, gpio.OUT)
+leftRear = gpio.PWM(19, 100)
 
-GPIO.setup(35, GPIO.OUT)
-rightFront = GPIO.PWM(35, 100)
-GPIO.setup(37, GPIO.OUT)
-leftFront = GPIO.PWM(37, 100)
+gpio.setup(26, gpio.OUT)
+rightFront = gpio.PWM(26, 100)
+gpio.setup(13, gpio.OUT)
+leftFront = gpio.PWM(13, 100)
+
 
 def stop():
   rightFront.ChangeDutyCycle(0)
@@ -25,97 +23,43 @@ def stop():
   
 def fwd():
   stop()
-  rightFront.ChangeDutyCycle(100)
-  leftFront.ChangeDutyCycle(100)
+  rightFront.ChangeDutyCycle(40)
+  leftFront.ChangeDutyCycle(40)
 
 def bwd():
   stop()
-  rightRear.ChangeDutyCycle(100)
-  leftRear.ChangeDutyCycle(100)
+  rightRear.ChangeDutyCycle(40)
+  leftRear.ChangeDutyCycle(40)
 
 def left():
   stop()
-  leftFront.ChangeDutyCycle(100)
-  rightRear.ChangeDutyCycle(100)
+  leftFront.ChangeDutyCycle(50)
+  rightRear.ChangeDutyCycle(50)
   
 
 def right():
   stop()
-  rightFront.ChangeDutyCycle(100)
-  leftRear.ChangeDutyCycle(100)
+  rightFront.ChangeDutyCycle(50)
+  leftRear.ChangeDutyCycle(50)
   
 rightFront.start(0)                      
 leftFront.start(0)
 rightRear.start(0)                      
 leftRear.start(0)
 
-GPIO.setwarnings(False)
+print('Start')
+time.sleep(0.5)
+fwd()
+time.sleep(0.5)
+left()
+time.sleep(1.2)
+bwd()
+time.sleep(0.5)
+right()
+time.sleep(1.15)
 
-#GPIO Mode (BOARD / BCM)
-#GPIO.setmode(GPIO.BCM)
- 
-#set GPIO Pins
-GPIO_TRIGGER = 12
-GPIO_ECHO = 18
- 
-#set GPIO direction (IN / OUT)
-GPIO.setup(GPIO_TRIGGER, GPIO.OUT)
-GPIO.setup(GPIO_ECHO, GPIO.IN)
- 
-def distance():
-    # set Trigger to HIGH
-    GPIO.output(GPIO_TRIGGER, True)
- 
-    # set Trigger after 0.01ms to LOW
-    time.sleep(0.00001)
-    GPIO.output(GPIO_TRIGGER, False)
- 
-    StartTime = time.time()
-    StopTime = time.time()
- 
-    # save StartTime
-    while GPIO.input(GPIO_ECHO) == 0:
-        StartTime = time.time()
- 
-    # save time of arrival
-    while GPIO.input(GPIO_ECHO) == 1:
-        StopTime = time.time()
- 
-    # time difference between start and arrival
-    TimeElapsed = StopTime - StartTime
-    # multiply with the sonic speed (34300 cm/s)
-    # and divide by 2, because there and back
-    distance = (TimeElapsed * 34300) / 2
- 
-    return distance
- 
-if __name__ == '__main__':
-    try:
-        last_time = time.time()
-        start_time = time.time()
-        bwd()
-        left()
-        while True:
-            dist = distance()
-            print ("Masz do przeszkody = %.1f cm" % dist)
-            time.sleep(0)
-            print('Frame took {} seconds'.format(time.time()-last_time))
-            print(start_time)
-            print(time.time())
-            last_time = time.time()
-            if time.time()>start_time+1:
-                stop()
-                if dist > 40:
-                    fwd()
-                elif dist <40:
-                    bwd()
-                    time.sleep(1)
-                    left()
-                    time.sleep(1)
-                    stop()
-            
- 
-        # Reset by pressing CTRL + C
-    except KeyboardInterrupt:
-        print("Measurement stopped by User")
-        GPIO.cleanup()
+
+
+stop()
+
+print('End')
