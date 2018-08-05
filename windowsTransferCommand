@@ -1,0 +1,1 @@
+pscp -pw password C:\Users\Maciek\source\repos\Robercik\main.py pi@192.168.1.7:/home/pi/
