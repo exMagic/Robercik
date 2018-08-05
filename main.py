@@ -59,7 +59,6 @@ right()
 time.sleep(1.15)
 
 
-
 stop()
 
 print('End')
