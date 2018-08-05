@@ -23,8 +23,8 @@ def stop():
   
 def fwd():
   stop()
-  rightFront.ChangeDutyCycle(40)
-  leftFront.ChangeDutyCycle(40)
+  rightFront.ChangeDutyCycle(80)
+  leftFront.ChangeDutyCycle(80)
 
 def bwd():
   stop()
@@ -57,6 +57,7 @@ bwd()
 time.sleep(0.5)
 right()
 time.sleep(1.15)
+
 
 
 stop()
