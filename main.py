@@ -1,6 +1,7 @@
 import RPi.GPIO as gpio
 import time
 import sys
+import paho.mqtt.client as mqtt
 
 gpio.setmode(gpio.BCM)
 
@@ -14,6 +15,13 @@ rightFront = gpio.PWM(26, 100)
 gpio.setup(13, gpio.OUT)
 leftFront = gpio.PWM(13, 100)
 
+rightFront.start(0)                      
+leftFront.start(0)
+rightRear.start(0)                      
+leftRear.start(0)
+
+##########################################################
+
 
 def stop():
   rightFront.ChangeDutyCycle(0)
@@ -21,15 +29,15 @@ def stop():
   rightRear.ChangeDutyCycle(0)
   leftRear.ChangeDutyCycle(0)
   
-def fwd():
+def fwd( speed ):
   stop()
-  rightFront.ChangeDutyCycle(80)
-  leftFront.ChangeDutyCycle(80)
+  rightFront.ChangeDutyCycle( speed )
+  leftFront.ChangeDutyCycle( speed )
 
-def bwd():
+def bwd( speed ):
   stop()
-  rightRear.ChangeDutyCycle(40)
-  leftRear.ChangeDutyCycle(40)
+  rightRear.ChangeDutyCycle( speed )
+  leftRear.ChangeDutyCycle( speed )
 
 def left():
   stop()
@@ -41,25 +49,43 @@ def right():
   stop()
   rightFront.ChangeDutyCycle(50)
   leftRear.ChangeDutyCycle(50)
+##########################################################
+
+
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code "+str(rc))
+    client.subscribe ("r - 1" ,0 )
+
+def on_message(client, userdata, msg):
+    print(msg.topic+" "+str(msg.payload))
+
+    if msg.payload == "1":
+        print("fwd")
+        fwd(35)
+
+    if msg.payload == "0":
+        print("stop")
+        stop()
+
+    if msg.payload == "3":
+        print("bwd")
+        bwd(35)
+
+
+
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
+
+client.username_pw_set("fbqakwbb", "aHcbcUe7xySu")
+client.connect('m20.cloudmqtt.com', 17901, 60)
+
+client.publish ( "r - 1", "start main.py")
+client.loop_forever()
+
+#########################################################
+
+
+
   
-rightFront.start(0)                      
-leftFront.start(0)
-rightRear.start(0)                      
-leftRear.start(0)
 
-print('Start')
-time.sleep(0.5)
-fwd()
-time.sleep(0.5)
-left()
-time.sleep(1.2)
-bwd()
-time.sleep(0.5)
-right()
-time.sleep(1.15)
-
-
-
-stop()
-
-print('End')

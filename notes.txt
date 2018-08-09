@@ -1,0 +1,13 @@
+https://pythonprogramming.net/supplies-needed-raspberry-pi-gopigo-robot/?completed=/robotics-raspberry-pi-tutorial-gopigo-introduction/
+//os
+https://www.dexterindustries.com/howto/install-raspbian-for-robots-image-on-an-sd-card/
+https://sourceforge.net/projects/dexterindustriesraspbianflavor/?source=typ_redirect
+
+pas robots1234
+
+sudo raspi-config
+
+//install gopigo3
+sudo curl -kL dexterindustries.com/update_gopigo3 | bash
+
+https://github.com/kiranshashiny/python-cloudmqtt-example/blob/master/publish.py
